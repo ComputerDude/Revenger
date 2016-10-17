@@ -1,14 +1,12 @@
 package com.computerdude.revenger;
 
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.libs.jline.console.history.History.Entry;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -19,6 +17,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 public class Main extends JavaPlugin{
+	
 	//PLAYER WHO DIED, PLAYER WHO KILLED
 	public static HashMap<Player, Player> hashmap = new HashMap<Player, Player>();
 	private static final Logger log = Logger.getLogger("Minecraft");
