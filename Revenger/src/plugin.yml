@@ -1,6 +1,8 @@
 name: Revenger
 main: com.computerdude.revenger.Main
 version: 1.0
+authors: [ComputerDude, JustBru00]
+depend: [Vault]
 commands:
    revenger:
       aliases: [rv]
