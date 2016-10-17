@@ -20,6 +20,7 @@ public class Main extends JavaPlugin{
 	
 	//PLAYER WHO DIED, PLAYER WHO KILLED
 	public static HashMap<Player, Player> hashmap = new HashMap<Player, Player>();
+	public static HashMap<String, Integer> topRevengers = new HashMap<String, Integer>();
 	private static final Logger log = Logger.getLogger("Minecraft");
     public static Economy econ = null;
     public static Permission perms = null;
@@ -27,12 +28,22 @@ public class Main extends JavaPlugin{
     public static Chat chat = null;
    // public HashMap<UUID, Integer> TopList = new HashMap<String, Integer>();
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onEnable(){
+		plugin = this; // Changed location
+		
 		PluginManager pl = Bukkit.getServer().getPluginManager();
 		pl.registerEvents(new Listeners(), this);
 		
-		 plugin = this;
+		if (getConfig().getConfigurationSection("revengers-data") == null) {
+			this.getConfig().createSection("revengers-data", topRevengers);
+			saveConfig();
+			topRevengers = (HashMap<String, Integer>) getConfig().getConfigurationSection("revengers-data");
+		} else {
+		 topRevengers = (HashMap<String, Integer>) getConfig().getConfigurationSection("revengers-data");
+		}
+		 
 		
         if (!setupEconomy() ) {
             log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
@@ -115,7 +126,7 @@ public class Main extends JavaPlugin{
 						}
 					} else if (args[0].equalsIgnoreCase("top")) { 
 						if (sender.hasPermission("revenger.top")) {
-						player.sendMessage(color("some txt here"));	}		
+						player.sendMessage(color(TopRevengerHandler.calculateTopRevenger()));	}		
 						else { 
 						player.sendMessage(color("&4Nope!"));
 						return true; }
@@ -144,6 +155,8 @@ public class Main extends JavaPlugin{
 			}
 			return false;
 		}
+		
+		
 		
 	 //   public boolean onTopListCommand(CommandSender sender, Command command, String label, String[] args) {
 	        

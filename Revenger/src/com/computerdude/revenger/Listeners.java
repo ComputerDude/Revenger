@@ -1,5 +1,7 @@
 package com.computerdude.revenger;
 
+import java.util.HashMap;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,6 +11,7 @@ import net.milkbowl.vault.economy.EconomyResponse;
 
 public class Listeners implements Listener{
 	
+	@SuppressWarnings("unchecked")
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		Player player = e.getEntity();
@@ -25,8 +28,21 @@ public class Listeners implements Listener{
 			EconomyResponse r = Main.econ.depositPlayer(player.getName(), Main.getInstance().getConfig().getInt("revenge-worth"));
 			EconomyResponse rr = Main.econ.withdrawPlayer(player.getKiller(), Main.getInstance().getConfig().getInt("revenge-worth"));
 			
+						
+			if (!Main.topRevengers.containsKey(player.getKiller().getUniqueId().toString()))  { // Check if the data exists in the config.
+				Main.topRevengers.put(player.getKiller().getUniqueId().toString(), 1);
+				Main.getInstance().getConfig().createSection("revengers-data", Main.topRevengers);
+				Main.getInstance().saveConfig();
+				Main.topRevengers = (HashMap<String, Integer>) Main.getInstance().getConfig().getConfigurationSection("revengers-data");
+			} else {
+				Main.topRevengers.put(player.getKiller().getUniqueId().toString(), Main.topRevengers.get(player.getKiller().getUniqueId().toString()) + 1);
+				Main.getInstance().getConfig().createSection("revengers-data", Main.topRevengers);
+				Main.getInstance().saveConfig();
+				Main.topRevengers = (HashMap<String, Integer>) Main.getInstance().getConfig().getConfigurationSection("revengers-data");
+			}
 			
-			if(r.transactionSuccess()) {
+			
+			if(r.transactionSuccess()) {				
 				player.getKiller().sendMessage(Main.color("&aYou just got " + Main.getInstance().getConfig().getInt("revenge-worth")));
 			}
 			else {
